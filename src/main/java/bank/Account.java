@@ -1,35 +1,21 @@
+package bank;
+
 public abstract class Account {
-    public static enum Type {
-        DEBIT("ДЕБЕТОВЫЙ"),
-        CREDIT("КРЕДИТНЫЙ");
-
-        private final String showType;
-
-        Type(String showType) {
-            this.showType = showType;
-        }
-
-        @Override
-        public String toString() {
-            return showType;
-        }
-    }
-
-    private final Type type;
+    private final AccountType type;
     private static int nextAccountNumber = 0;
 
     private final int accountNumber;
     protected double balance;
     private final Customer owner;
 
-    public Account(Customer owner, Type type) {
+    public Account(Customer owner, AccountType type) {
         this.type = type;
         this.accountNumber = nextAccountNumber++;
         this.balance = 0.0;
         this.owner = owner;
     }
 
-    public Type getType() {
+    public AccountType getType() {
         return type;
     }
 

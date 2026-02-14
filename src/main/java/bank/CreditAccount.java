@@ -1,8 +1,10 @@
+package bank;
+
 public class CreditAccount extends Account {
     private final double creditLimit;
 
     public CreditAccount(Customer owner, double creditLimit) {
-        super(owner, Type.CREDIT);
+        super(owner, AccountType.CREDIT);
         this.creditLimit = creditLimit;
     }
 

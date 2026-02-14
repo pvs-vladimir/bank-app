@@ -1,25 +1,10 @@
+package bank;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Transaction {
-    public static enum Type {
-        DEPOSIT("ПОПОЛНЕНИЕ"),
-        WITHDRAW("СНЯТИЕ"),
-        TRANSFER("ПЕРЕВОД");
-
-        private final String showType;
-
-        Type(String showType) {
-            this.showType = showType;
-        }
-
-        @Override
-        public String toString() {
-            return showType;
-        }
-    }
-
-    private final Type type;
+    private final TransactionType type;
     private final double amount;
     private final Integer fromAccountNumber;
     private final Integer toAccountNumber;
@@ -27,7 +12,7 @@ public class Transaction {
     private boolean success;
     private String message;
 
-    public Transaction(Type type, double amount,
+    public Transaction(TransactionType type, double amount,
                        Integer fromAccountNumber, Integer toAccountNumber) {
         this.type = type;
         this.amount = amount;
@@ -38,7 +23,7 @@ public class Transaction {
         this.message = "ОК";
     }
 
-    public Type getType() {
+    public TransactionType getType() {
         return type;
     }
 

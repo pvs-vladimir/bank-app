@@ -1,3 +1,5 @@
+package bank;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -88,71 +90,71 @@ public class BankApp {
     }
 
     private static void createCustomer() {
-        System.out.print("Создание клиента. Введите ФИО: ");
+        System.out.print("\nСоздание клиента. Введите ФИО: ");
         String fullName = scanner.nextLine();
         if (fullName.trim().equals("")) {
-            System.out.println("Ошибка: ФИО не может быть пустым");
+            System.out.println("\nОшибка: ФИО не может быть пустым");
             return;
         }
 
         Customer customer = bank.createCustomer(fullName);
-        System.out.println("Клиент успешно создан");
+        System.out.println("\nКлиент успешно создан");
         System.out.println("| ID: " + customer.getId() + " | ФИО: " + customer.getFullName() + " |");
     }
 
     private static void openDebitAccount() {
-        System.out.println("Открытие дебетового счета. Необходимо выбрать клиента");
+        System.out.println("\nОткрытие дебетового счета. Необходимо выбрать клиента");
         Customer customer = selectCustomer();
         if (customer == null) return;
 
         Account account = bank.openDebitAccount(customer);
-        System.out.println("Дебетовый счет успешно открыт");
+        System.out.println("\nДебетовый счет успешно открыт");
         System.out.println("| НОМЕР СЧЕТА: " + account.getAccountNumber() +
                 " | ВЛАДЕЛЕЦ: " + account.getOwner().getFullName() + " |");
     }
 
     private static void openCreditAccount() {
-        System.out.println("Открытие кредитного счета. Необходимо выбрать клиента");
+        System.out.println("\nОткрытие кредитного счета. Необходимо выбрать клиента");
         Customer customer = selectCustomer();
         if (customer == null) return;
 
-        System.out.print("Введите кредитный лимит: ");
+        System.out.print("\nВведите кредитный лимит: ");
         try {
             double creditLimit = scanner.nextDouble();
             scanner.nextLine();
             if (creditLimit < 0) {
-                System.out.println("Ошибка: кредитный лимит должен быть неотрицательным");
+                System.out.println("\nОшибка: кредитный лимит должен быть неотрицательным");
                 return;
             }
 
             Account account = bank.openCreditAccount(customer, creditLimit);
-            System.out.println("Кредитный счет успешно открыт");
+            System.out.println("\nКредитный счет успешно открыт");
             System.out.println("| НОМЕР СЧЕТА: " + account.getAccountNumber() +
                     " | ВЛАДЕЛЕЦ: " + account.getOwner().getFullName() +
                     " | КРЕДИТНЫЙ ЛИМИТ: " + creditLimit + " |");
         } catch(InputMismatchException e) {
-            System.out.println("Ошибка: введите корректный кредитный лимит");
+            System.out.println("\nОшибка: введите корректный кредитный лимит");
             scanner.nextLine();
         }
     }
 
     private static void depositToAccount() {
-        System.out.println("Пополнение счета");
+        System.out.println("\nПополнение счета");
         int accountNumber = selectAccountNumber();
         if (accountNumber == -1) return;
 
-        System.out.print("Введите сумму для пополнения: ");
+        System.out.print("\nВведите сумму для пополнения: ");
         try {
             String amountInput = scanner.nextLine().trim();
             double amount = Double.parseDouble(amountInput);
             if (amount <= 0) {
-                System.out.println("Ошибка: сумма должна быть больше 0");
+                System.out.println("\nОшибка: сумма должна быть больше 0");
                 return;
             }
 
             boolean success = bank.deposit(accountNumber, amount);
             if (success) {
-                System.out.println("Счет успешно пополнен на " + amount);
+                System.out.println("\nСчет успешно пополнен на " + amount);
                 Account account = bank.findAccount(accountNumber);
                 if (account != null) {
                     System.out.println("Текущий баланс: " + account.getBalance());
@@ -160,34 +162,34 @@ public class BankApp {
             } else {
                 Transaction lastTransaction = bank.getLastTransaction();
                 if (lastTransaction != null) {
-                    System.out.println("Ошибка при пополнении счета: " + lastTransaction.getMessage());
+                    System.out.println("\nОшибка при пополнении счета: " + lastTransaction.getMessage());
                 } else {
-                    System.out.println("Ошибка при пополнении счета");
+                    System.out.println("\nОшибка при пополнении счета");
                 }
             }
         } catch (InputMismatchException e) {
-            System.out.println("Ошибка: введите корректную сумму");
+            System.out.println("\nОшибка: введите корректную сумму");
             scanner.nextLine();
         }
     }
 
     private static void withdrawFromAccount() {
-        System.out.println("Снятие со счета");
+        System.out.println("\nСнятие со счета");
         int accountNumber = selectAccountNumber();
         if (accountNumber == -1) return;
 
-        System.out.print("Введите сумму для снятия: ");
+        System.out.print("\nВведите сумму для снятия: ");
         try {
             String amountInput = scanner.nextLine().trim();
             double amount = Double.parseDouble(amountInput);
             if (amount <= 0) {
-                System.out.println("Ошибка: сумма должна быть больше 0");
+                System.out.println("\nОшибка: сумма должна быть больше 0");
                 return;
             }
 
             boolean success = bank.withdraw(accountNumber, amount);
             if (success) {
-                System.out.println("Со счета успешно снято " + amount);
+                System.out.println("\nСо счета успешно снято " + amount);
                 Account account = bank.findAccount(accountNumber);
                 if (account != null) {
                     System.out.println("Текущий баланс: " + account.getBalance());
@@ -195,61 +197,61 @@ public class BankApp {
             } else {
                 Transaction lastTransaction = bank.getLastTransaction();
                 if (lastTransaction != null) {
-                    System.out.println("Ошибка при пополнении счета: " + lastTransaction.getMessage());
+                    System.out.println("\nОшибка при пополнении счета: " + lastTransaction.getMessage());
                 } else {
-                    System.out.println("Ошибка при пополнении счета");
+                    System.out.println("\nОшибка при пополнении счета");
                 }
             }
         } catch (InputMismatchException e) {
-            System.out.println("Ошибка: введите корректную сумму");
+            System.out.println("\nОшибка: введите корректную сумму");
             scanner.nextLine();
         }
     }
 
     private static void transferBetweenAccounts() {
-        System.out.println("Перевод между счетами");
+        System.out.println("\nПеревод между счетами");
 
-        System.out.println("Счет отправителя:");
+        System.out.println("\nСчет отправителя:");
         int fromAccount = selectAccountNumber();
         if (fromAccount == -1) return;
 
-        System.out.println("Счет получателя:");
+        System.out.println("\nСчет получателя:");
         int toAccount = selectAccountNumber();
         if (toAccount == -1) return;
 
         if (fromAccount == toAccount) {
-            System.out.println("Ошибка: нельзя перевести на тот же счёт!");
+            System.out.println("\nОшибка: нельзя перевести на тот же счёт!");
             return;
         }
 
-        System.out.print("Введите сумму для перевода: ");
+        System.out.print("\nВведите сумму для перевода: ");
         try {
             String  amountInput = scanner.nextLine().trim();
             double amount = Double.parseDouble(amountInput);
             if (amount <= 0) {
-                System.out.println("Ошибка: сумма должна быть больше 0");
+                System.out.println("\nОшибка: сумма должна быть больше 0");
                 return;
             }
 
             boolean success = bank.transfer(fromAccount, toAccount, amount);
             if (success) {
-                System.out.println("Успешно выполнен перевод на сумму " + amount);
+                System.out.println("\nУспешно выполнен перевод на сумму " + amount);
             } else {
                 Transaction lastTransaction = bank.getLastTransaction();
                 if (lastTransaction != null) {
-                    System.out.println("Ошибка при пополнении счета: " + lastTransaction.getMessage());
+                    System.out.println("\nОшибка при пополнении счета: " + lastTransaction.getMessage());
                 } else {
-                    System.out.println("Ошибка при пополнении счета");
+                    System.out.println("\nОшибка при пополнении счета");
                 }
             }
         } catch (InputMismatchException e) {
-            System.out.println("Ошибка: введите корректную сумму");
+            System.out.println("\nОшибка: введите корректную сумму");
             scanner.nextLine();
         }
     }
 
     private static void showCustomerAccounts() {
-        System.out.println("Счета клиента. Необходимо выбрать клиента");
+        System.out.println("\nСчета клиента. Необходимо выбрать клиента");
         Customer customer = selectCustomer();
         if (customer == null) return;
 
@@ -281,19 +283,19 @@ public class BankApp {
             System.out.println(sb.toString());
         }
 
-        System.out.print("Введите ID клиента: ");
+        System.out.print("\nВведите ID клиента: ");
         try {
             int customerId = scanner.nextInt();
             scanner.nextLine();
 
             Customer customer = bank.findCustomer(customerId);
             if (customer == null) {
-                System.out.println("Клиент с ID: " + customerId + " не найден!");
+                System.out.println("\nКлиент с ID: " + customerId + " не найден!");
                 return null;
             }
             return customer;
         } catch (InputMismatchException e) {
-            System.out.println("Ошибка: введите корректный ID!");
+            System.out.println("\nОшибка: введите корректный ID!");
             scanner.nextLine();
             return null;
         }
@@ -318,19 +320,19 @@ public class BankApp {
             System.out.println(sb.toString());
         }
 
-        System.out.print("Введите номер счета: ");
+        System.out.print("\nВведите номер счета: ");
         try {
             int accountNumber = scanner.nextInt();
             scanner.nextLine();
 
             Account account = bank.findAccount(accountNumber);
             if (account == null) {
-                System.out.println("Счет с номером " + accountNumber + " не найден");
+                System.out.println("\nСчет с номером " + accountNumber + " не найден");
                 return -1;
             }
             return accountNumber;
         } catch (InputMismatchException e) {
-            System.out.println("Ошибка: введите корректный номер счета!");
+            System.out.println("\nОшибка: введите корректный номер счета!");
             scanner.nextLine();
             return -1;
         }

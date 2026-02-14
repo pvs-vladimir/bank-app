@@ -1,3 +1,5 @@
+package bank;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -63,7 +65,7 @@ public class Bank {
     }
 
     public boolean deposit(int accountNumber, double amount) {
-        Transaction transaction = new Transaction(Transaction.Type.DEPOSIT, amount, null, accountNumber);
+        Transaction transaction = new Transaction(TransactionType.DEPOSIT, amount, null, accountNumber);
 
         if (amount <= 0) {
             logTransaction(transaction, false, "Неверная сумма");
@@ -83,7 +85,7 @@ public class Bank {
     }
 
     public boolean withdraw(int accountNumber, double amount) {
-        Transaction transaction = new Transaction(Transaction.Type.WITHDRAW, amount, accountNumber, null);
+        Transaction transaction = new Transaction(TransactionType.WITHDRAW, amount, accountNumber, null);
 
         if (amount <= 0) {
             logTransaction(transaction, false, "Неверная сумма");
@@ -103,7 +105,7 @@ public class Bank {
     }
 
     public boolean transfer(int from, int to, double amount) {
-        Transaction transaction = new Transaction(Transaction.Type.TRANSFER, amount, from, to);
+        Transaction transaction = new Transaction(TransactionType.TRANSFER, amount, from, to);
         
         if (amount <= 0) {
             logTransaction(transaction, false, "Неверная сумма");

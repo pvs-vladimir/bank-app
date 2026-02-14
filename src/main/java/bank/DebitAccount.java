@@ -1,6 +1,8 @@
+package bank;
+
 public class DebitAccount extends Account {
     public DebitAccount(Customer owner) {
-        super(owner, Type.DEBIT);
+        super(owner, AccountType.DEBIT);
     }
 
     @Override
