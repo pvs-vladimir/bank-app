@@ -3,8 +3,10 @@ package bank;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.InputMismatchException;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class BankApp {
@@ -120,9 +122,13 @@ public class BankApp {
 
         System.out.print("\nВведите кредитный лимит: ");
         try {
-            double creditLimit = scanner.nextDouble();
-            scanner.nextLine();
-            if (creditLimit < 0) {
+            Optional<BigDecimal> moneyValue = readMoneyAmount();
+            if (moneyValue.isEmpty()) {
+                System.out.println("\nОшибка: кредитный лимит имеет некорректное денежное представление");
+                return;
+            }
+            BigDecimal creditLimit = moneyValue.get();
+            if (creditLimit.compareTo(BigDecimal.ZERO) <= 0) {
                 System.out.println("\nОшибка: кредитный лимит должен быть неотрицательным");
                 return;
             }
@@ -145,9 +151,13 @@ public class BankApp {
 
         System.out.print("\nВведите сумму для пополнения: ");
         try {
-            String amountInput = scanner.nextLine().trim();
-            double amount = Double.parseDouble(amountInput);
-            if (amount <= 0) {
+            Optional<BigDecimal> moneyValue = readMoneyAmount();
+            if (moneyValue.isEmpty()) {
+                System.out.println("\nОшибка: сумма имеет некорректное денежное представление");
+                return;
+            }
+            BigDecimal amount = moneyValue.get();
+            if (amount.compareTo(BigDecimal.ZERO) <= 0) {
                 System.out.println("\nОшибка: сумма должна быть больше 0");
                 return;
             }
@@ -180,9 +190,13 @@ public class BankApp {
 
         System.out.print("\nВведите сумму для снятия: ");
         try {
-            String amountInput = scanner.nextLine().trim();
-            double amount = Double.parseDouble(amountInput);
-            if (amount <= 0) {
+            Optional<BigDecimal> moneyValue = readMoneyAmount();
+            if (moneyValue.isEmpty()) {
+                System.out.println("\nОшибка: сумма имеет некорректное денежное представление");
+                return;
+            }
+            BigDecimal amount = moneyValue.get();
+            if (amount.compareTo(BigDecimal.ZERO) <= 0) {
                 System.out.println("\nОшибка: сумма должна быть больше 0");
                 return;
             }
@@ -226,9 +240,13 @@ public class BankApp {
 
         System.out.print("\nВведите сумму для перевода: ");
         try {
-            String  amountInput = scanner.nextLine().trim();
-            double amount = Double.parseDouble(amountInput);
-            if (amount <= 0) {
+            Optional<BigDecimal> moneyValue = readMoneyAmount();
+            if (moneyValue.isEmpty()) {
+                System.out.println("\nОшибка: сумма имеет некорректное денежное представление");
+                return;
+            }
+            BigDecimal amount = moneyValue.get();
+            if (amount.compareTo(BigDecimal.ZERO) <= 0) {
                 System.out.println("\nОшибка: сумма должна быть больше 0");
                 return;
             }
@@ -335,6 +353,28 @@ public class BankApp {
             System.out.println("\nОшибка: введите корректный номер счета!");
             scanner.nextLine();
             return -1;
+        }
+    }
+
+    private static Optional<BigDecimal> readMoneyAmount() {
+        String input = scanner.nextLine().trim();
+        if (input.isEmpty()) {
+            return Optional.empty();
+        }
+        input = input.replace(',', '.');
+
+        try {
+            BigDecimal amount = new BigDecimal(input);
+            
+            int scale = amount.scale();
+            if (scale > Common.MONEY_UNIT_PRECISION) {
+                return Optional.empty();
+            }
+
+            amount.setScale(Common.MONEY_UNIT_PRECISION);
+            return Optional.of(amount);
+        } catch (NumberFormatException e) {
+            return Optional.empty();
         }
     }
 }

@@ -1,5 +1,6 @@
 package bank;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -49,7 +50,7 @@ public class Bank {
         return account;
     }
 
-    public Account openCreditAccount(Customer owner, double creditLimit) {
+    public Account openCreditAccount(Customer owner, BigDecimal creditLimit) {
         Account account = new CreditAccount(owner, creditLimit);
         accounts.put(account.getAccountNumber(), account);
         customerAccounts.get(owner.getId()).add(account.getAccountNumber());
@@ -64,10 +65,10 @@ public class Bank {
         return accounts.get(accountNumber);
     }
 
-    public boolean deposit(int accountNumber, double amount) {
+    public boolean deposit(int accountNumber, BigDecimal amount) {
         Transaction transaction = new Transaction(TransactionType.DEPOSIT, amount, null, accountNumber);
 
-        if (amount <= 0) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             logTransaction(transaction, false, "Неверная сумма");
             return false;
         }
@@ -84,10 +85,10 @@ public class Bank {
         return success;
     }
 
-    public boolean withdraw(int accountNumber, double amount) {
+    public boolean withdraw(int accountNumber, BigDecimal amount) {
         Transaction transaction = new Transaction(TransactionType.WITHDRAW, amount, accountNumber, null);
 
-        if (amount <= 0) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             logTransaction(transaction, false, "Неверная сумма");
             return false;
         }
@@ -104,10 +105,10 @@ public class Bank {
         return success;
     }
 
-    public boolean transfer(int from, int to, double amount) {
+    public boolean transfer(int from, int to, BigDecimal amount) {
         Transaction transaction = new Transaction(TransactionType.TRANSFER, amount, from, to);
         
-        if (amount <= 0) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             logTransaction(transaction, false, "Неверная сумма");
             return false;
         }
@@ -181,10 +182,17 @@ public class Bank {
     }
 
     private class AccountsStats {
-        public int debitCount = 0;
-        public int creditCount = 0;
-        public double debitTotal = 0.0;
-        public double creditTotal = 0.0;
+        public int debitCount;
+        public int creditCount;
+        public BigDecimal debitTotal;
+        public BigDecimal creditTotal;
+
+        public AccountsStats() {
+            this.debitCount = 0;
+            this.creditCount = 0;
+            this.debitTotal = BigDecimal.ZERO.setScale(Common.MONEY_UNIT_PRECISION);
+            this.creditTotal = BigDecimal.ZERO.setScale(Common.MONEY_UNIT_PRECISION);
+        }
     }
 
     private AccountsStats getAccountsStat() {
@@ -192,10 +200,10 @@ public class Bank {
         for (Account account : accounts.values()) {
             if (account instanceof DebitAccount) {
                 stats.debitCount++;
-                stats.debitTotal += account.getBalance();
+                stats.debitTotal = stats.debitTotal.add(account.getBalance());
             } else if (account instanceof CreditAccount) {
                 stats.creditCount++;
-                stats.creditTotal += account.getBalance();
+                stats.creditTotal = stats.creditTotal.add(account.getBalance());
             }
         }
         return stats;

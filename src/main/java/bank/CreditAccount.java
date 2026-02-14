@@ -1,21 +1,24 @@
 package bank;
 
-public class CreditAccount extends Account {
-    private final double creditLimit;
+import java.math.BigDecimal;
 
-    public CreditAccount(Customer owner, double creditLimit) {
+public class CreditAccount extends Account {
+    private final BigDecimal creditLimit;
+
+    public CreditAccount(Customer owner, BigDecimal creditLimit) {
         super(owner, AccountType.CREDIT);
         this.creditLimit = creditLimit;
     }
 
-    public double getCreditLimit() {
+    public BigDecimal getCreditLimit() {
         return creditLimit;
     }
 
     @Override
-    public boolean withdraw(double amount) {
-        if ((amount > 0) && ((balance - amount) >= -creditLimit)) {
-            balance -= amount;
+    public boolean withdraw(BigDecimal amount) {
+        if ((amount.compareTo(BigDecimal.ZERO) > 0) &&
+            (balance.subtract(amount).compareTo(creditLimit.negate()) >= 0)) {
+            balance = balance.subtract(amount);
             return true;
         }
         return false;

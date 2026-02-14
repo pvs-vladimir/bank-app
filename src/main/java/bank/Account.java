@@ -1,17 +1,19 @@
 package bank;
 
+import java.math.BigDecimal;
+
 public abstract class Account {
     private final AccountType type;
     private static int nextAccountNumber = 0;
 
     private final int accountNumber;
-    protected double balance;
+    protected BigDecimal balance;
     private final Customer owner;
 
     public Account(Customer owner, AccountType type) {
         this.type = type;
         this.accountNumber = nextAccountNumber++;
-        this.balance = 0.0;
+        this.balance = BigDecimal.ZERO.setScale(Common.MONEY_UNIT_PRECISION);
         this.owner = owner;
     }
 
@@ -23,7 +25,7 @@ public abstract class Account {
         return accountNumber;
     }
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
@@ -31,17 +33,17 @@ public abstract class Account {
         return owner;
     }
 
-    public boolean deposit(double amount) {
-        if (amount > 0){
-            balance += amount;
+    public boolean deposit(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) > 0){
+            balance = balance.add(amount);
             return true;
         }
         return false;
     }
 
-    public abstract boolean withdraw(double amount);
+    public abstract boolean withdraw(BigDecimal amount);
 
-    public boolean transfer(Account to, double amount) {
+    public boolean transfer(Account to, BigDecimal amount) {
         if (this.withdraw(amount)) {
             return to.deposit(amount);
         }

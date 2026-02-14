@@ -1,18 +1,19 @@
 package bank;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Transaction {
     private final TransactionType type;
-    private final double amount;
+    private final BigDecimal amount;
     private final Integer fromAccountNumber;
     private final Integer toAccountNumber;
     private final LocalDateTime timestamp;
     private boolean success;
     private String message;
 
-    public Transaction(TransactionType type, double amount,
+    public Transaction(TransactionType type, BigDecimal amount,
                        Integer fromAccountNumber, Integer toAccountNumber) {
         this.type = type;
         this.amount = amount;
@@ -27,7 +28,7 @@ public class Transaction {
         return type;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
